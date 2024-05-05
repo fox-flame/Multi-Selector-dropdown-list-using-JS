@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Multi Selector</title>
+    <style>
+      * {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      }
+      body {
+        background-color: blueviolet;
+      }
+      input {
+        outline: none;
+        border: none;
+      }
+      .multi-selector {
+        width: max-content;
+      }
+      .select-field {
+        border: 1px solid rgb(187, 187, 187);
+      }
+      .select-field,
+      .task,
+      .list {
+        width: 100%;
+        background-color: white;
+        padding: 0.3rem;
+      }
+      .list {
+        box-shadow: 0 30px 60px rgb(0, 0, 0, 0.2);
+        display: none;
+      }
+      .down-arrow {
+        font-size: 1.2rem;
+        display: inline-block;
+        cursor: pointer;
+        transition: 0.2s linear;
+      }
+      .task {
+        display: block;
+        padding-left: 0;
+      }
+      .task span {
+        float: right;
+        font-size: 0.6rem;
+        padding-top: 6px;
+      }
+      .task:hover {
+        background-color: aliceblue;
+      }
+      .show {
+        display: block;
+      }
+      .rotate180 {
+        transform: rotate(-60deg);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="selected-tasks" style="margin: 2rem"></div>
+    <div class="multi-selector">
+      <div class="select-field">
+        <input
+          type="text"
+          name=""
+          placeholder="Choose tasks"
+          id=""
+          class="input-selector"
+        />
+        <span class="down-arrow">&blacktriangledown;</span>
+      </div>
+      <!---------List of checkboxes and options----------->
+      <div class="list">
+        <label for="task1" class="task">
+          <input
+            type="checkbox"
+            name=""
+            id="task1"
+            value="Task 1"
+            onchange="onSelect(event)"
+          />
+          Task 1
+          <span>10 mins</span>
+        </label>
+        <label for="task2" class="task">
+          <input
+            type="checkbox"
+            name=""
+            id="task2"
+            value="Task 2"
+            onchange="onSelect(event)"
+          />
+          Task 2
+          <span>20 mins</span>
+        </label>
+        <label for="task3" class="task">
+          <input
+            type="checkbox"
+            name=""
+            id="task3"
+            value="Task 3"
+            onchange="onSelect(event)"
+          />
+          Task 3
+          <span>30 mins</span>
+        </label>
+        <label for="task4" class="task">
+          <input
+            type="checkbox"
+            name=""
+            id="task4"
+            value="Task 4"
+            onchange="onSelect(event)"
+          />
+          Task 4
+          <span>40 mins</span>
+        </label>
+      </div>
+    </div>
+
+    <script>
+      document.querySelector(".select-field").addEventListener("click", () => {
+        document.querySelector(".list").classList.toggle("show");
+        document.querySelector(".down-arrow").classList.toggle("rotate180");
+      });
+
+      //create a function to Append the pill when use checks
+      function appendSelectedChild(childToAppend) {
+        const selectedTasks = document.querySelector(".selected-tasks");
+        selectedTasks.insertAdjacentHTML("beforebegin", childToAppend);
+      }
+
+      //lets create a function to remove the pill
+      //we will pass id of the related pill
+      function removeSelectedChild(id) {
+        const selectedTask = document.getElementById(id);
+        //when we remove any pill, we have to uncheck from list too
+        const unCheckRelatedList = document.getElementById(id.split("_")[1]);
+
+        if (unCheckRelatedList.checked === true) {
+          unCheckRelatedList.checked = false;
+        }
+
+        selectedTask.parentNode.removeChild(selectedTask);
+      }
+
+      //create a function to append items on select
+      function onSelect(e) {
+        //create an custom id for appended items
+        const selected_id = "selected_" + e.target.id;
+        //lets create a pill with cross button
+        // we will use template literals
+        const childToAppend = `<span style="background-color:white; padding:0.3rem; margin:0.3rem;" id='${selected_id}'>${e.target.value} <button onclick="removeSelectedChild('${selected_id}')">x</button></span>`;
+
+        //Now handling duplicates
+        if (e.target.checked === true) {
+          //now append this child inside selected-tasks div
+          appendSelectedChild(childToAppend);
+        } else {
+          removeSelectedChild(selected_id);
+        }
+      }
+    </script>
+  </body>
+</html>
